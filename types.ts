@@ -12,3 +12,9 @@ export interface Dataset {
     link?: string;
     library_identifier?: string;
 }
+
+export interface SearchResult {
+    datasets: Dataset[];
+    sources: GroundingChunk[];
+    answer?: string;
+}

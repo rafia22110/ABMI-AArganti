@@ -40,6 +40,9 @@ export const translations = {
     results: {
         sourcesTitle: "Sources",
         useCasesTitle: "Use Cases",
+        insightTitle: "Gemini Insight",
+        helpful: "Was this helpful?",
+        thanks: "Thanks for your feedback!",
         export: {
             title: "Export",
             json: "Export as JSON",
@@ -91,6 +94,9 @@ export const translations = {
     results: {
         sourcesTitle: "מקורות",
         useCasesTitle: "מקרי שימוש",
+        insightTitle: "תובנות Gemini",
+        helpful: "האם זה עזר לך?",
+        thanks: "תודה על המשוב!",
         export: {
             title: "ייצוא",
             json: "ייצא כ-JSON",

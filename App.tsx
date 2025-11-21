@@ -13,6 +13,7 @@ const App: React.FC = () => {
   const [query, setQuery] = useState<string>('');
   const [datasets, setDatasets] = useState<Dataset[] | null>(null);
   const [sources, setSources] = useState<GroundingChunk[]>([]);
+  const [answer, setAnswer] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [language, setLanguage] = useState<'en' | 'he'>('he');
@@ -44,11 +45,13 @@ const App: React.FC = () => {
     setError(null);
     setDatasets(null);
     setSources([]);
+    setAnswer('');
 
     try {
       const result = await findDatasets(searchQuery, language);
       setDatasets(result.datasets);
       setSources(result.sources);
+      setAnswer(result.answer || '');
     } catch (e) {
       setError(t.error);
       console.error(e);
@@ -80,6 +83,8 @@ const App: React.FC = () => {
     setQuery(categoryQuery);
     handleSearch(categoryQuery);
   };
+
+  const hasResults = datasets !== null || answer !== '';
 
   return (
     <div className="bg-brand-primary min-h-screen text-brand-text font-sans flex flex-col items-center">
@@ -121,8 +126,17 @@ const App: React.FC = () => {
           <div className="mt-8 flex-grow">
             {isLoading && <Loader />}
             {error && <div className="text-center text-red-400 bg-red-900/20 p-4 rounded-lg">{error}</div>}
-            {datasets && <ResultsDisplay datasets={datasets} sources={sources} t={t.results} />}
-            {!isLoading && !datasets && !error && (
+            
+            {hasResults && (
+              <ResultsDisplay 
+                datasets={datasets || []} 
+                sources={sources} 
+                answer={answer}
+                t={t.results} 
+              />
+            )}
+
+            {!isLoading && !hasResults && !error && (
                <div className="text-center text-brand-text-secondary pt-16">
                   <p className="text-2xl">{t.welcomeMessage}</p>
                   <p className="mt-2">{t.welcomeInstructions}</p>
