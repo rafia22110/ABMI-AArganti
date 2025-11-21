@@ -1,49 +1,62 @@
 import { GoogleGenAI } from "@google/genai";
 import type { GroundingChunk, Dataset } from '../types';
 
-if (!process.env.API_KEY) {
-  throw new Error("API_KEY environment variable not set");
-}
-
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+// Initialize the Gemini API client.
+// The API key is retrieved from the environment variables.
+// We pass a fallback empty string to the constructor to prevent initialization errors,
+// but the actual call will validate the key.
+const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || "" });
 
 const getSystemInstruction = (language: 'en' | 'he') => `
-You are an expert AI research assistant. Your task is to find AI training datasets based on user requests and respond with a valid JSON array.
+You are an expert AI research assistant. Your task is to find AI training datasets based on user requests.
 
-**CRITICAL RESPONSE FORMATTING RULES:**
-1.  **JSON ONLY:** Your entire output MUST be a single, valid JSON array of objects. Do not include any explanatory text, markdown formatting (like \`\`\`json), or anything outside of the JSON structure.
-2.  **LANGUAGE:** All text content inside the JSON MUST be in ${language === 'he' ? 'Hebrew' : 'English'}.
-3.  **STRUCTURE:** Each object in the array represents a dataset and must have the following keys: "name" (string), "summary" (string), "use_cases" (array of strings). The following keys are optional: "link" (string), and "library_identifier" (string).
-4.  **EMPTY RESULT:** If no relevant datasets are found, you MUST return an empty array: [].
-
-**TASK INSTRUCTIONS:**
-1.  Analyze the user's query to find relevant, up-to-date, and high-quality datasets using your search capabilities.
-2.  For each dataset, provide a descriptive name, a brief summary, and a list of primary use cases.
-3.  Include a direct link to the dataset if available.
-4.  If you can identify a common library identifier (e.g., from Hugging Face Datasets, TensorFlow Datasets like "cifar10"), provide it in the 'library_identifier' field. Otherwise, omit this field from the object.
+**CRITICAL RULES:**
+1. Output MUST be a valid JSON array.
+2. DO NOT output Markdown code blocks (like \`\`\`json). Return raw JSON only.
+3. Language MUST be ${language === 'he' ? 'Hebrew' : 'English'}.
+4. Structure each item with: "name", "summary", "use_cases" (array), "link" (optional), "library_identifier" (optional).
+5. If no datasets found, return [].
+6. DO NOT include any conversational text before or after the JSON.
 `;
 
 export async function findDatasets(prompt: string, language: 'en' | 'he'): Promise<{ datasets: Dataset[]; sources: GroundingChunk[] }> {
+  // Check for API key before making the request
+  if (!process.env.API_KEY) {
+      throw new Error("API Key is missing. Please ensure the API_KEY environment variable is set.");
+  }
+
   try {
     const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
+      model: "gemini-3-pro-preview",
       contents: prompt,
       config: {
         systemInstruction: getSystemInstruction(language),
         tools: [{ googleSearch: {} }],
+        // responseMimeType: "application/json", // Not supported with tools in this model version
       },
     });
 
-    let jsonText = response.text.trim();
-    // The model might still wrap the JSON in markdown backticks. Strip them for robust parsing.
-    if (jsonText.startsWith('```json')) {
-      jsonText = jsonText.slice(7);
-    }
-    if (jsonText.endsWith('```')) {
-      jsonText = jsonText.slice(0, -3);
-    }
+    let jsonText = response.text ? response.text.trim() : "";
     
-    const datasets: Dataset[] = JSON.parse(jsonText);
+    // Clean up markdown code blocks if the model includes them
+    jsonText = jsonText.replace(/^```json\s*/, '').replace(/^```\s*/, '').replace(/\s*```$/, '');
+    
+    // Remove any leading conversational text (e.g., "Here is the list...")
+    const firstBracket = jsonText.indexOf('[');
+    const lastBracket = jsonText.lastIndexOf(']');
+    
+    if (firstBracket !== -1 && lastBracket !== -1) {
+        jsonText = jsonText.substring(firstBracket, lastBracket + 1);
+    }
+
+    let datasets: Dataset[] = [];
+    
+    try {
+        datasets = JSON.parse(jsonText);
+    } catch (e) {
+        console.error("Failed to parse JSON:", jsonText);
+        throw new Error("Received invalid data format from AI.");
+    }
     
     const groundingMetadata = response.candidates?.[0]?.groundingMetadata;
     const sources: GroundingChunk[] = groundingMetadata?.groundingChunks?.filter(
@@ -53,6 +66,6 @@ export async function findDatasets(prompt: string, language: 'en' | 'he'): Promi
     return { datasets, sources };
   } catch (error) {
     console.error("Gemini API call failed:", error);
-    throw new Error("Failed to communicate with the Gemini API and parse its response.");
+    throw new Error("Failed to communicate with the Gemini API.");
   }
 }

@@ -1,5 +1,5 @@
 {
-  "name": "AI  Assistant",
+  "name": "AI Inventor's Assistant",
   "description": "A personal assistant for AI inventors and entrepreneurs to discover datasets for training models. It uses Gemini with Google Search grounding to find up-to-date information on medical, image, and audio datasets.",
   "requestFramePermissions": []
 }

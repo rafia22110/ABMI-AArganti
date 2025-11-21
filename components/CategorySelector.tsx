@@ -2,6 +2,9 @@ import React from 'react';
 import MedicalIcon from './icons/MedicalIcon';
 import ImageIcon from './icons/ImageIcon';
 import AudioIcon from './icons/AudioIcon';
+import TextIcon from './icons/TextIcon';
+import TimeSeriesIcon from './icons/TimeSeriesIcon';
+import RLIcon from './icons/RLIcon';
 
 interface CategorySelectorProps {
   onSelect: (query: string) => void;
@@ -9,6 +12,9 @@ interface CategorySelectorProps {
     medical: { label: string; query: string };
     image: { label: string; query: string };
     audio: { label: string; query: string };
+    text: { label: string; query: string };
+    timeSeries: { label: string; query: string };
+    rl: { label: string; query: string };
   };
 }
 
@@ -19,11 +25,11 @@ const CategoryButton: React.FC<{
 }> = ({ icon, label, onClick }) => (
   <button
     onClick={onClick}
-    className="flex flex-col items-center justify-center gap-2 p-4 bg-brand-secondary rounded-lg border border-transparent hover:border-brand-accent hover:bg-brand-accent/10 transition-all duration-200 ease-in-out transform hover:-translate-y-1"
+    className="flex flex-col items-center justify-center gap-2 p-4 bg-brand-secondary rounded-lg border border-transparent hover:border-brand-accent hover:bg-brand-accent/10 transition-all duration-200 ease-in-out transform hover:-translate-y-1 h-32"
     aria-label={label}
   >
     {icon}
-    <span className="text-sm font-medium text-brand-text">{label}</span>
+    <span className="text-sm font-medium text-brand-text text-center">{label}</span>
   </button>
 );
 
@@ -48,10 +54,28 @@ const CategorySelector: React.FC<CategorySelectorProps> = ({ onSelect, t }) => {
       icon: <AudioIcon className="w-8 h-8 text-green-400" />,
       query: t.audio.query,
     },
+    {
+      id: 'text',
+      label: t.text.label,
+      icon: <TextIcon className="w-8 h-8 text-yellow-400" />,
+      query: t.text.query,
+    },
+    {
+      id: 'timeSeries',
+      label: t.timeSeries.label,
+      icon: <TimeSeriesIcon className="w-8 h-8 text-cyan-400" />,
+      query: t.timeSeries.query,
+    },
+    {
+      id: 'rl',
+      label: t.rl.label,
+      icon: <RLIcon className="w-8 h-8 text-purple-400" />,
+      query: t.rl.query,
+    },
   ];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+    <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-8">
       {categories.map((cat) => (
         <CategoryButton
           key={cat.id}

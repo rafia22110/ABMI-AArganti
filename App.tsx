@@ -3,6 +3,7 @@ import Header from './components/Header';
 import CategorySelector from './components/CategorySelector';
 import SearchInput from './components/SearchInput';
 import ResultsDisplay from './components/ResultsDisplay';
+import SavedSearches from './components/SavedSearches';
 import Loader from './components/Loader';
 import { findDatasets } from './services/geminiService';
 import type { Dataset, GroundingChunk } from './types';
@@ -15,11 +16,24 @@ const App: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [language, setLanguage] = useState<'en' | 'he'>('he');
+  const [savedSearches, setSavedSearches] = useState<string[]>([]);
 
   useEffect(() => {
     document.documentElement.lang = language;
     document.documentElement.dir = language === 'he' ? 'rtl' : 'ltr';
   }, [language]);
+
+  // Load saved searches from localStorage on mount
+  useEffect(() => {
+    const storedSearches = localStorage.getItem('savedSearches');
+    if (storedSearches) {
+      try {
+        setSavedSearches(JSON.parse(storedSearches));
+      } catch (e) {
+        console.error("Failed to parse saved searches", e);
+      }
+    }
+  }, []);
 
   const t = translations[language];
 
@@ -43,6 +57,25 @@ const App: React.FC = () => {
     }
   }, [language, t.error]);
 
+  const handleSaveSearch = (searchQuery: string) => {
+    if (!searchQuery.trim()) return;
+    
+    setSavedSearches(prev => {
+      if (prev.includes(searchQuery)) return prev;
+      const newSearches = [searchQuery, ...prev].slice(0, 10); // Limit to 10
+      localStorage.setItem('savedSearches', JSON.stringify(newSearches));
+      return newSearches;
+    });
+  };
+
+  const handleRemoveSearch = (searchQuery: string) => {
+    setSavedSearches(prev => {
+      const newSearches = prev.filter(s => s !== searchQuery);
+      localStorage.setItem('savedSearches', JSON.stringify(newSearches));
+      return newSearches;
+    });
+  };
+
   const handleCategorySelect = (categoryQuery: string) => {
     setQuery(categoryQuery);
     handleSearch(categoryQuery);
@@ -65,13 +98,26 @@ const App: React.FC = () => {
             query={query}
             setQuery={setQuery}
             onSearch={handleSearch}
+            onSave={handleSaveSearch}
             isLoading={isLoading}
             t={{
               placeholder: t.searchInputPlaceholder,
               button: t.searchButton,
               buttonLoading: t.searchButtonLoading,
+              save: t.saveSearch,
             }}
           />
+          
+          <SavedSearches 
+            searches={savedSearches} 
+            onSelect={(q) => { setQuery(q); handleSearch(q); }} 
+            onRemove={handleRemoveSearch}
+            t={{
+              title: t.savedSearchesTitle,
+              empty: t.noSavedSearches
+            }}
+          />
+
           <div className="mt-8 flex-grow">
             {isLoading && <Loader />}
             {error && <div className="text-center text-red-400 bg-red-900/20 p-4 rounded-lg">{error}</div>}
