@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import MedicalIcon from './icons/MedicalIcon';
 import ImageIcon from './icons/ImageIcon';
 import AudioIcon from './icons/AudioIcon';
@@ -35,7 +35,7 @@ const CategoryButton: React.FC<{
 
 
 const CategorySelector: React.FC<CategorySelectorProps> = ({ onSelect, t }) => {
-  const categories = [
+  const categories = useMemo(() => [
     {
       id: 'medical',
       label: t.medical.label,
@@ -72,7 +72,7 @@ const CategorySelector: React.FC<CategorySelectorProps> = ({ onSelect, t }) => {
       icon: <RLIcon className="w-8 h-8 text-purple-400" />,
       query: t.rl.query,
     },
-  ];
+  ], [t]);
 
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-8">
