@@ -1,0 +1,15 @@
+{
+  "name": "Meet3D: Metaverse Classroom",
+  "description": "Transform your Google Meet session into an immersive 3D classroom with avatars.",
+  "addOns": {
+    "meet": {
+      "sidePanel": {
+        "url": "https://localhost:3000/sidepanel.html"
+      },
+      "mainStage": {
+        "url": "https://localhost:3000/mainstage.html"
+      }
+    }
+  },
+  "manifestVersion": 1
+}

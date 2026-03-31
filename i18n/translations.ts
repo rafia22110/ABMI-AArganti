@@ -44,11 +44,12 @@ export const translations = {
         helpful: "Was this helpful?",
         thanks: "Thanks for your feedback!",
         export: {
-            title: "Export",
+            title: "Export & Source",
             json: "Export Blueprint (JSON)",
             csv: "Export Specs (CSV)",
             python_pandas: "Copy Integration Snippet",
             tf_pytorch: "Copy 3D Model Loader",
+            extension_code: "Download Extension Code",
             copied: "Copied!",
         }
     }
@@ -98,11 +99,12 @@ export const translations = {
         helpful: "האם זה עזר לך?",
         thanks: "תודה על המשוב!",
         export: {
-            title: "ייצוא",
+            title: "ייצוא וקוד מקור",
             json: "ייצא תוכנית (JSON)",
             csv: "ייצא מפרט (CSV)",
             python_pandas: "העתק קטע קוד אינטגרציה",
             tf_pytorch: "העתק טוען מודל 3D",
+            extension_code: "הורד קוד תוסף (Boilerplate)",
             copied: "הועתק!",
         }
     }
