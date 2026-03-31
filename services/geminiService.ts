@@ -5,23 +5,32 @@ import type { GroundingChunk, Dataset, SearchResult } from '../types';
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || "" });
 
 const getSystemInstruction = (language: 'en' | 'he') => `
-You are an expert AI research assistant. 
+You are an expert Google Meet 3D Extension Architect and Metaverse Strategist.
+
+**CONTEXT:**
+The user wants to transform traditional video calls (like Google Meet) into shared 3D immersive spaces.
+The core idea is:
+1. Instead of video boxes, participants are represented by 3D avatars.
+2. Everyone sees the same 3D environment (the "Metaverse Classroom").
+3. They can collaborate, move, and complete tasks together in 3D.
+4. Support for glasses-free 3D displays (autostereoscopic) is a key innovation.
+5. Integration is via the Google Meet Add-ons SDK.
 
 **TASK:**
-Provide a helpful "answer" (insight/analysis) to the user's request AND a list of relevant "datasets".
+Provide a helpful "answer" (blueprint/strategy/pitch) to the user's request AND a list of relevant "components" (tools, SDKs, or platforms).
 
 **CRITICAL OUTPUT RULES:**
 1. Output MUST be a valid JSON object.
 2. Structure:
    {
-     "answer": "Your detailed analysis, insight, or answer to the question here...",
+     "answer": "Your detailed architecture, strategy, or pitch here. Use professional terminology.",
      "datasets": [
-       { "name": "...", "summary": "...", "use_cases": ["..."], "link": "...", "library_identifier": "..." }
+       { "name": "Tool/SDK Name", "summary": "How it helps build this vision", "use_cases": ["Example use case"], "link": "https://...", "library_identifier": "category-name" }
      ]
    }
 3. DO NOT output Markdown code blocks. Return raw JSON only.
 4. Language MUST be ${language === 'he' ? 'Hebrew' : 'English'}.
-5. If no datasets are found, return an empty array for "datasets", but YOU MUST provide a helpful "answer".
+5. If no specific tools are found, return a list of theoretical components needed.
 `;
 
 export async function findDatasets(prompt: string, language: 'en' | 'he'): Promise<SearchResult> {
@@ -31,17 +40,18 @@ export async function findDatasets(prompt: string, language: 'en' | 'he'): Promi
 
   try {
     const response = await ai.models.generateContent({
-      model: "gemini-3-pro-preview",
+      model: "gemini-1.5-flash",
       contents: prompt,
-      config: {
-        systemInstruction: getSystemInstruction(language),
-        tools: [{ googleSearch: {} }],
+      generationConfig: {
+        responseMimeType: "application/json",
       },
+      systemInstruction: getSystemInstruction(language),
+      tools: [{ googleSearch: {} }],
     });
 
-    let text = response.text ? response.text.trim() : "";
+    let text = response.response.text() ? response.response.text().trim() : "";
     
-    // Clean up markdown code blocks
+    // Clean up markdown code blocks if they exist despite instructions
     text = text.replace(/^```json\s*/, '').replace(/^```\s*/, '').replace(/\s*```$/, '');
 
     let parsedData: { answer?: string; datasets?: Dataset[] } = {};
@@ -79,11 +89,9 @@ export async function findDatasets(prompt: string, language: 'en' | 'he'): Promi
 
     // Normalizing the result
     const datasets = Array.isArray(parsedData.datasets) ? parsedData.datasets : [];
-    // If the answer is empty but we have datasets, we can generate a generic one or leave it empty.
-    // But if parsing failed completely (datasets is empty) and we have text, that text is the answer.
     const answer = parsedData.answer || (datasets.length === 0 ? text : "");
 
-    const groundingMetadata = response.candidates?.[0]?.groundingMetadata;
+    const groundingMetadata = response.response.candidates?.[0]?.groundingMetadata;
     const sources: GroundingChunk[] = groundingMetadata?.groundingChunks?.filter(
         (chunk: any): chunk is GroundingChunk => chunk.web && chunk.web.uri && chunk.web.title
     ) || [];

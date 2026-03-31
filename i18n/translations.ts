@@ -1,108 +1,108 @@
 export const translations = {
   en: {
-    headerTitle: "AI Inventor's Assistant",
-    headerSubtitle: "Your personal assistant for discovering AI training datasets. What are you building today?",
-    searchInputPlaceholder: "Or enter a custom query...",
-    searchButton: "Search",
-    searchButtonLoading: "Searching...",
-    saveSearch: "Save search",
-    savedSearchesTitle: "Saved Searches",
-    noSavedSearches: "No saved searches yet.",
-    welcomeMessage: "Discover Your Next Dataset",
-    welcomeInstructions: "Select a category or enter a custom query to begin.",
-    error: "Failed to fetch data. Please try again.",
+    headerTitle: "Meet3D: Metaverse for Google Meet",
+    headerSubtitle: "Transform your Google Meet into a shared 3D experience. No more boring boxes—just avatars and immersive spaces.",
+    searchInputPlaceholder: "Ask about 3D spaces, avatars, or Meet integration...",
+    searchButton: "Build Vision",
+    searchButtonLoading: "Architecting...",
+    saveSearch: "Save Strategy",
+    savedSearchesTitle: "Saved Strategies",
+    noSavedSearches: "No saved strategies yet.",
+    welcomeMessage: "Ready to go 3D?",
+    welcomeInstructions: "Select a component or ask how to build your metaverse classroom.",
+    error: "Failed to connect to the Metaverse engine. Please try again.",
     categories: {
-      medical: {
-        label: "Medical Datasets",
-        query: "Find open-source medical datasets for AI model training, especially for diagnostics and imaging.",
+      environments: {
+        label: "3D Environments",
+        query: "How can I build shared 3D environments for Google Meet using WebGL or Unity?",
       },
-      image: {
-        label: "Image Analysis",
-        query: "List datasets for image analysis and computer vision, including object detection and spectral imaging.",
+      avatars: {
+        label: "Avatar Systems",
+        query: "What are the best tools for real-time 3D avatars (like ReadyPlayerMe or D-ID) that can be integrated into a meeting?",
       },
-      audio: {
-        label: "Audio Analysis",
-        query: "Find public datasets for sound classification, speech recognition, and audio ecosystem analysis.",
+      meetSdk: {
+        label: "Meet Add-on SDK",
+        query: "How to use the Google Meet Add-ons SDK to synchronize a 3D state across all participants?",
       },
-      text: {
-        label: "Text Data",
-        query: "Find diverse text datasets for natural language processing (NLP), including corpora for sentiment analysis, translation, and summarization.",
+      collaboration: {
+        label: "Collaborative Tasks",
+        query: "Ideas for multiplayer 3D tasks and gamification in a virtual classroom setting.",
       },
-      timeSeries: {
-        label: "Time Series",
-        query: "List time series datasets for forecasting, anomaly detection, and trend analysis in finance, weather, and IoT.",
+      glassesFree: {
+        label: "Glasses-free 3D",
+        query: "How to optimize 3D content for autostereoscopic (glasses-free) displays in an educational context?",
       },
-      rl: {
-        label: "Reinforcement Learning",
-        query: "Find environments and datasets for reinforcement learning, including game simulations, robotics control tasks, and decision-making scenarios.",
+      pitch: {
+        label: "Pitch Generator",
+        query: "Create a persuasive pitch for a school principal about why they should adopt 3D Metaverse classrooms over traditional Zoom/Meet.",
       }
     },
     results: {
-        sourcesTitle: "Sources",
-        useCasesTitle: "Use Cases",
-        insightTitle: "Gemini Insight",
+        sourcesTitle: "Technical Sources",
+        useCasesTitle: "Implementation Ideas",
+        insightTitle: "Meet3D Architect Insight",
         helpful: "Was this helpful?",
         thanks: "Thanks for your feedback!",
         export: {
             title: "Export",
-            json: "Export as JSON",
-            csv: "Export as CSV",
-            python_pandas: "Copy Pandas Snippet",
-            tf_pytorch: "Copy TF/PyTorch Snippet",
+            json: "Export Blueprint (JSON)",
+            csv: "Export Specs (CSV)",
+            python_pandas: "Copy Integration Snippet",
+            tf_pytorch: "Copy 3D Model Loader",
             copied: "Copied!",
         }
     }
   },
   he: {
-    headerTitle: "עוזר לממציא בינה מלאכותית",
-    headerSubtitle: "העוזר האישי שלך לגילוי מאגרי מידע לאימון מודלי AI. מה את/ה בונה היום?",
-    searchInputPlaceholder: "או הקלד/י שאילתה מותאמת אישית...",
-    searchButton: "חיפוש",
-    searchButtonLoading: "מחפש...",
-    saveSearch: "שמור חיפוש",
-    savedSearchesTitle: "חיפושים שמורים",
-    noSavedSearches: "אין עדיין חיפושים שמורים.",
-    welcomeMessage: "גלה את מאגר המידע הבא שלך",
-    welcomeInstructions: "בחר/י קטגוריה או הזן/י שאילתה מותאמת אישית כדי להתחיל.",
-    error: "נכשל בטעינת הנתונים. אנא נסה/י שוב.",
+    headerTitle: "Meet3D: מטאברס לגוגל מיט",
+    headerSubtitle: "הפוך את שיחות הגוגל מיט שלך לחוויית 3D משותפת. לא עוד ריבועי וידאו משעממים - רק אבטרים ומרחבים סוחפים.",
+    searchInputPlaceholder: "שאל על מרחבי 3D, אבטרים, או אינטגרציה עם Meet...",
+    searchButton: "בנה חזון",
+    searchButtonLoading: "מתכנן...",
+    saveSearch: "שמור אסטרטגיה",
+    savedSearchesTitle: "אסטרטגיות שמורות",
+    noSavedSearches: "אין עדיין אסטרטגיות שמורות.",
+    welcomeMessage: "מוכנים לעבור ל-3D?",
+    welcomeInstructions: "בחר רכיב או שאל איך לבנות את כיתת המטאברס שלך.",
+    error: "נכשל בחיבור למנוע המטאברס. אנא נסה שוב.",
     categories: {
-      medical: {
-        label: "מאגרי מידע רפואיים",
-        query: "מצא מאגרי מידע רפואיים בקוד פתוח לאימון מודלי AI, במיוחד לאבחון והדמיה.",
+      environments: {
+        label: "סביבות 3D",
+        query: "איך ניתן לבנות סביבות 3D משותפות לגוגל מיט באמצעות WebGL או Unity?",
       },
-      image: {
-        label: "ניתוח תמונה",
-        query: "הצג מאגרי מידע לניתוח תמונה וראייה ממוחשבת, כולל זיהוי אובייקטים והדמיה ספקטרלית.",
+      avatars: {
+        label: "מערכות אבטרים",
+        query: "מהם הכלים הטובים ביותר לאבטרי 3D בזמן אמת (כמו ReadyPlayerMe או D-ID) שניתן לשלב בשיחה?",
       },
-      audio: {
-        label: "ניתוח אודיו",
-        query: "מצא מאגרי מידע ציבוריים לסיווג צלילים, זיהוי דיבור וניתוח מערכות אקולוגיות של שמע.",
+      meetSdk: {
+        label: "Meet Add-on SDK",
+        query: "איך משתמשים ב-Google Meet Add-ons SDK כדי לסנכרן מצב 3D בין כל המשתתפים?",
       },
-      text: {
-        label: "נתוני טקסט",
-        query: "מצא מאגרי מידע טקסטואליים מגוונים לעיבוד שפה טבעית (NLP), כולל קורפוסים לניתוח סנטימנט, תרגום וסיכום.",
+      collaboration: {
+        label: "משימות שיתופיות",
+        query: "רעיונות למשימות 3D מרובות משתתפים וגיימיפיקציה בסביבת כיתה וירטואלית.",
       },
-      timeSeries: {
-        label: "סדרות עיתיות",
-        query: "הצג מאגרי מידע של סדרות עיתיות לחיזוי, גילוי חריגות וניתוח מגמות בתחומי הפיננסים, מזג האוויר והאינטרנט של הדברים (IoT).",
+      glassesFree: {
+        label: "3D ללא משקפיים",
+        query: "איך לייעל תוכן 3D עבור מסכים אוטוסטריאוסקופיים (ללא משקפיים) בהקשר חינוכי?",
       },
-      rl: {
-        label: "למידת חיזוק",
-        query: "מצא סביבות ומאגרי מידע ללמידת חיזוק (Reinforcement Learning), כולל סימולציות משחק, משימות בקרה ברובוטיקה ותרחישי קבלת החלטות.",
+      pitch: {
+        label: "מחולל Pitch",
+        query: "צור פיץ' משכנע למנהל בית ספר לגבי הסיבות לעבור לכיתות מטאברס 3D במקום זום/מיט מסורתי.",
       }
     },
     results: {
-        sourcesTitle: "מקורות",
-        useCasesTitle: "מקרי שימוש",
-        insightTitle: "תובנות Gemini",
+        sourcesTitle: "מקורות טכניים",
+        useCasesTitle: "רעיונות ליישום",
+        insightTitle: "תובנות אדריכל Meet3D",
         helpful: "האם זה עזר לך?",
         thanks: "תודה על המשוב!",
         export: {
             title: "ייצוא",
-            json: "ייצא כ-JSON",
-            csv: "ייצא כ-CSV",
-            python_pandas: "העתק קטע קוד Pandas",
-            tf_pytorch: "העתק קטע קוד TF/PyTorch",
+            json: "ייצא תוכנית (JSON)",
+            csv: "ייצא מפרט (CSV)",
+            python_pandas: "העתק קטע קוד אינטגרציה",
+            tf_pytorch: "העתק טוען מודל 3D",
             copied: "הועתק!",
         }
     }
