@@ -1,5 +1,5 @@
 {
-  "name": "AI Inventor's Assistant",
-  "description": "A personal assistant for AI inventors and entrepreneurs to discover datasets for training models. It uses Gemini with Google Search grounding to find up-to-date information on medical, image, and audio datasets.",
+  "name": "Meet3D: Metaverse for Google Meet",
+  "description": "Assistant for building shared 3D spaces and avatar-based experiences for Google Meet. Transform calls into immersive metaverse classrooms.",
   "requestFramePermissions": []
 }

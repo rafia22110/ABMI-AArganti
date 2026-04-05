@@ -84,7 +84,7 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ datasets, sources, answ
   return (
     <div className="bg-brand-secondary p-6 rounded-lg shadow-lg animate-fade-in mb-12">
         <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold text-brand-text">Results</h2>
+            <h2 className="text-2xl font-bold text-brand-text">{datasets.length > 0 ? "Metaverse Blueprint" : "Vision Strategy"}</h2>
             {datasets.length > 0 && <ExportMenu datasets={datasets} t={t.export} />}
         </div>
 

@@ -9,6 +9,7 @@ interface ExportMenuProps {
         csv: string;
         python_pandas: string;
         tf_pytorch: string;
+        extension_code: string;
         copied: string;
     }
 }
@@ -52,7 +53,7 @@ const ExportMenu: React.FC<ExportMenuProps> = ({ datasets, t }) => {
 
     const handleExportJson = () => {
         const jsonString = JSON.stringify(datasets, null, 2);
-        downloadFile("datasets.json", jsonString, "application/json");
+        downloadFile("blueprint.json", jsonString, "application/json");
     };
 
     const handleExportCsv = () => {
@@ -65,23 +66,33 @@ const ExportMenu: React.FC<ExportMenuProps> = ({ datasets, t }) => {
             const identifier = d.library_identifier || "";
             return [name, summary, useCases, link, identifier].join(',');
         }).join('\n');
-        downloadFile("datasets.csv", "\uFEFF" + header + rows, "text/csv;charset=utf-8;");
+        downloadFile("specification.csv", "\uFEFF" + header + rows, "text/csv;charset=utf-8;");
     };
     
+    const handleDownloadExtension = async () => {
+        // In a real app, this might fetch a zip.
+        // Here we provide a simple instruction or a combined file for demo.
+        const readme = `Meet3D Extension Boilerplate Instructions:
+1. Save the 'extension/' files from the repository.
+2. Upload sidepanel.html and mainstage.html to your HTTPS server.
+3. Update manifest.json with your actual URLs.
+4. Go to Google Cloud Console, enable Google Meet API, and configure the Add-on.
+`;
+        downloadFile("extension_readme.txt", readme, "text/plain");
+    };
+
     const handleCopyPandas = () => {
         const dataString = JSON.stringify(datasets, null, 2);
-        const snippet = `import pandas as pd
-import json
+        const snippet = `import json
 
-# Data discovered using AI Inventor's Assistant
-# For larger datasets, it's better to load from the exported JSON file.
-json_data = """
+# Integration Blueprint for Meet3D
+# Use this to programmatically load the 3D asset manifest
+blueprint_data = """
 ${dataString}
 """
 
-data = json.loads(json_data)
-df = pd.DataFrame(data)
-print(df.head())
+data = json.loads(blueprint_data)
+print(f"Loaded {len(data)} Metaverse components.")
 `;
         navigator.clipboard.writeText(snippet).then(() => {
             setCopySuccess('pandas');
@@ -91,36 +102,17 @@ print(df.head())
     };
     
     const handleCopyTfPytorch = () => {
-        let snippet = `# Code snippets to load datasets using popular libraries.
-# Note: You might need to install the required libraries first.
-# pip install datasets tensorflow_datasets
-`;
-    
-        datasets.forEach(d => {
-            snippet += `
-# ---
-# Dataset: ${d.name}`;
-            if (d.library_identifier) {
-                snippet += `
-# Found library identifier: "${d.library_identifier}"
+        let snippet = `// Three.js Loader Script for Meet3D Components
+// This script demonstrates how to dynamically load the discovered assets.
 
-# Option 1: Using Hugging Face 'datasets'
-# from datasets import load_dataset
-# hf_dataset = load_dataset("${d.library_identifier}")
-# print(hf_dataset)
+const assets = ${JSON.stringify(datasets, null, 2)};
 
-# Option 2: Using 'tensorflow_datasets'
-# import tensorflow_datasets as tfds
-# tfds_dataset = tfds.load("${d.library_identifier}")
-# print(tfds_dataset)
+assets.forEach(asset => {
+    console.log("Initializing component:", asset.name);
+    // Integration logic for ${datasets[0]?.library_identifier || 'Meet3D'}
+    // window.meet.addon.syncState({ type: 'load', id: asset.library_identifier });
+});
 `;
-            } else {
-                snippet += `
-# No common library identifier found for this dataset.
-# You may need to download it manually from: ${d.link || 'the source link.'}
-`;
-            }
-        });
     
         navigator.clipboard.writeText(snippet.trim()).then(() => {
             setCopySuccess('tf');
@@ -153,6 +145,10 @@ print(df.head())
                         <MenuItem onClick={handleExportCsv}>
                              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
                             <span>{t.csv}</span>
+                        </MenuItem>
+                        <MenuItem onClick={handleDownloadExtension}>
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+                            <span>{t.extension_code}</span>
                         </MenuItem>
                         <MenuItem onClick={handleCopyPandas}>
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>

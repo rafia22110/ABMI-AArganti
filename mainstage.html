@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meet3D: Futuristic Main Stage</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://www.gstatic.com/meetjs/addons/1.1.0/meet.addons.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #050505; color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        #canvas-container { width: 100%; height: 100%; position: relative; }
+
+        /* Futuristic HUD */
+        #hud {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 30px;
+            box-sizing: border-box;
+        }
+
+        .hud-panel {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(79, 70, 229, 0.3);
+            border-radius: 16px;
+            padding: 15px 25px;
+            box-shadow: 0 0 20px rgba(79, 70, 229, 0.2);
+            pointer-events: auto;
+        }
+
+        .corner-tl { align-self: flex-start; border-left: 4px solid #4f46e5; }
+        .corner-tr { align-self: flex-end; border-right: 4px solid #a855f7; }
+        .bottom-bar { align-self: center; width: 60%; display: flex; justify-content: space-around; border-bottom: 2px solid rgba(79, 70, 229, 0.5); }
+
+        .scanline {
+            width: 100%; height: 2px;
+            background: rgba(79, 70, 229, 0.1);
+            position: absolute;
+            animation: scan 4s linear infinite;
+        }
+
+        @keyframes scan {
+            from { top: 0; }
+            to { top: 100%; }
+        }
+
+        .glitch-text {
+            animation: glitch 3s infinite;
+        }
+
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+    </style>
+</head>
+<body>
+    <div id="canvas-container">
+        <div class="scanline"></div>
+
+        <!-- Futuristic HUD Overlay -->
+        <div id="hud">
+            <div class="flex justify-between w-full">
+                <div class="hud-panel corner-tl">
+                    <h1 class="text-indigo-400 font-bold tracking-widest text-xs uppercase mb-1">System Status: Active</h1>
+                    <div class="text-2xl font-black glitch-text">MEET3D CORE</div>
+                    <div class="text-[10px] text-gray-400 mt-2">LINKED TO GOOGLE MEET CLASSROOM</div>
+                </div>
+
+                <div class="hud-panel corner-tr text-right">
+                    <div class="text-purple-400 text-xs font-mono" id="clock">00:00:00</div>
+                    <div class="text-white text-lg font-bold" id="participant-tag">User: Agent_01</div>
+                    <div class="w-full bg-gray-800 h-1 mt-2 rounded-full overflow-hidden">
+                        <div class="bg-indigo-500 h-full w-2/3 animate-pulse"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hud-panel bottom-bar mb-4">
+                <div class="flex items-center gap-6 text-xs font-bold uppercase tracking-widest">
+                    <div class="text-indigo-400 border-b-2 border-indigo-400 pb-1">3D Environment</div>
+                    <div class="text-gray-500 hover:text-white cursor-pointer transition-colors">Shared Whiteboard</div>
+                    <div class="text-gray-500 hover:text-white cursor-pointer transition-colors">AI Assistant</div>
+                    <div class="text-gray-500 hover:text-white cursor-pointer transition-colors">Quest Log</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. Three.js Engine: Cyber Classroom ---
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x020205);
+        scene.fog = new THREE.FogExp2(0x020205, 0.1);
+
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(0, 2, 8);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+        // Futuristic Neon Grid
+        const gridHelper = new THREE.GridHelper(40, 40, 0x4f46e5, 0x1e1b4b);
+        scene.add(gridHelper);
+
+        // Floating Particles (Stars/Data)
+        const starGeo = new THREE.BufferGeometry();
+        const starCount = 2000;
+        const posArray = new Float32Array(starCount * 3);
+        for(let i=0; i<starCount*3; i++) {
+            posArray[i] = (Math.random() - 0.5) * 50;
+        }
+        starGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        const starMat = new THREE.PointsMaterial({ size: 0.05, color: 0x818cf8 });
+        const stars = new THREE.Points(starGeo, starMat);
+        scene.add(stars);
+
+        // The "Avatar" - A stylized Crystalline Mesh
+        const geometry = new THREE.IcosahedronGeometry(1, 0);
+        const material = new THREE.MeshPhongMaterial({
+            color: 0x6366f1,
+            wireframe: true,
+            emissive: 0x4338ca,
+            emissiveIntensity: 0.5
+        });
+        const avatar = new THREE.Mesh(geometry, material);
+        avatar.position.y = 2;
+        scene.add(avatar);
+
+        // Inner Core of the Avatar
+        const coreGeo = new THREE.SphereGeometry(0.4, 16, 16);
+        const coreMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+        const core = new THREE.Mesh(coreGeo, coreMat);
+        avatar.add(core);
+
+        // Lights
+        const pLight = new THREE.PointLight(0xa855f7, 2, 20);
+        pLight.position.set(2, 5, 2);
+        scene.add(pLight);
+
+        const ambLight = new THREE.AmbientLight(0x404040);
+        scene.add(ambLight);
+
+        // --- 2. Interaction Logic ---
+        let moveForward = false;
+        let moveBackward = false;
+        let moveLeft = false;
+        let moveRight = false;
+
+        document.addEventListener('keydown', (e) => {
+            if(e.code === 'KeyW') moveForward = true;
+            if(e.code === 'KeyS') moveBackward = true;
+            if(e.code === 'KeyA') moveLeft = true;
+            if(e.code === 'KeyD') moveRight = true;
+        });
+        document.addEventListener('keyup', (e) => {
+            if(e.code === 'KeyW') moveForward = false;
+            if(e.code === 'KeyS') moveBackward = false;
+            if(e.code === 'KeyA') moveLeft = false;
+            if(e.code === 'KeyD') moveRight = false;
+        });
+
+        // --- 3. Google Meet SDK Integration ---
+        let sdkSession = null;
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                sdkSession = await window.meet.addon.createAddonSession();
+                console.log("Meet3D Futuristic Engine Initialized");
+            } catch (err) {
+                console.warn("Running outside Google Meet context (Local Demo Mode)");
+            }
+        });
+
+        // Update Clock in HUD
+        setInterval(() => {
+            const now = new Date();
+            document.getElementById('clock').innerText = now.toLocaleTimeString('he-IL');
+        }, 1000);
+
+        // --- 4. Animation Frame ---
+        const clock = new THREE.Clock();
+        function animate() {
+            requestAnimationFrame(animate);
+            const delta = clock.getDelta();
+
+            // Avatar Animation
+            avatar.rotation.y += delta * 0.5;
+            avatar.rotation.x += delta * 0.3;
+            avatar.position.y = 2 + Math.sin(Date.now() * 0.002) * 0.2;
+
+            // Movement logic
+            if(moveForward) avatar.position.z -= 0.1;
+            if(moveBackward) avatar.position.z += 0.1;
+            if(moveLeft) avatar.position.x -= 0.1;
+            if(moveRight) avatar.position.x += 0.1;
+
+            // Sync with Google Meet (conceptual)
+            if(sdkSession && (moveForward || moveBackward || moveLeft || moveRight)) {
+                // sdkSession.syncState({ position: avatar.position });
+            }
+
+            stars.rotation.y += 0.0005;
+
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+</html>
